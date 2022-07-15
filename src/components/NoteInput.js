@@ -10,7 +10,7 @@ class NoteInput extends React.Component {
       title: "",
       body: "",
       archived: false,
-      createdAt: "",
+      createdAt: new Date(),
     };
 
     this.onTitleChangeEventHandler = this.onTitleChangeEventHandler.bind(this);

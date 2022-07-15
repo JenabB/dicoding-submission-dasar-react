@@ -1,17 +1,23 @@
 import React from "react";
 import { getInitialData } from "./utils";
 import NoteInput from "./components/NoteInput";
-import NoteList from "./components/NoteList";
+import NoteItem from "./components/NoteItem";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      query: "",
       notes: getInitialData(),
     };
 
+    this.onQueryChange = this.onQueryChange.bind(this);
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
     this.onAddNoteHandler = this.onAddNoteHandler.bind(this);
+  }
+
+  onQueryChange(event) {
+    this.setState({ query: event.target.value });
   }
 
   onDeleteHandler(id) {
@@ -37,16 +43,34 @@ class App extends React.Component {
   }
 
   render() {
+    const items = this.state.notes
+      .filter((data) => {
+        if (this.state.query === null) return data;
+        else if (
+          data.title.toLowerCase().includes(this.state.query.toLowerCase())
+        ) {
+          return data;
+        }
+      })
+      .map((data, index) => {
+        return (
+          <NoteItem key={index} {...data} onDelete={this.onDeleteHandler} />
+        );
+      });
     return (
       <div className="contact-app">
         <NoteInput addNote={this.onAddNoteHandler} />
-        {/* <ContactInput addContact={this.onAddContactHandler} />
-        <h2>Daftar Kontak</h2>
-        <ContactList
-          contacts={this.state.contacts}
-          onDelete={this.onDeleteHandler}
-        /> */}
-        <NoteList notes={this.state.notes} />
+        {this.state.notes.length > 0 ? (
+          <input
+            type="search"
+            placeholder="Search"
+            value={this.state.query}
+            onChange={this.onQueryChange}
+          />
+        ) : (
+          <h1 className="notes-list__empty-message">No note yet</h1>
+        )}
+        <div className="notes-list">{items}</div>
       </div>
     );
   }
