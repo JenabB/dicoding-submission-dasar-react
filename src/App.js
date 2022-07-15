@@ -2,6 +2,7 @@ import React from "react";
 import { getInitialData } from "./utils";
 import NoteInput from "./components/NoteInput";
 import NoteItem from "./components/NoteItem";
+import ArchivedNote from "./components/ArchivedNote";
 
 class App extends React.Component {
   constructor(props) {
@@ -14,10 +15,23 @@ class App extends React.Component {
     this.onQueryChange = this.onQueryChange.bind(this);
     this.onDeleteHandler = this.onDeleteHandler.bind(this);
     this.onAddNoteHandler = this.onAddNoteHandler.bind(this);
+    this.onArchiveHandler = this.onArchiveHandler.bind(this);
   }
 
   onQueryChange(event) {
     this.setState({ query: event.target.value });
+  }
+
+  onArchiveHandler(id) {
+    const updatedNote = this.state.notes.find((el) => el.id === id);
+    updatedNote.archived = !updatedNote.archived;
+    const update = this.state.notes.map((el) => {
+      if (el.id === id) {
+        return updatedNote;
+      }
+      return el;
+    });
+    this.setState({ notes: update });
   }
 
   onDeleteHandler(id) {
@@ -25,7 +39,7 @@ class App extends React.Component {
     this.setState({ notes });
   }
 
-  onAddNoteHandler({ title, body, archieved, createdAt }) {
+  onAddNoteHandler({ title, body, archived, createdAt }) {
     this.setState((prevState) => {
       return {
         notes: [
@@ -34,7 +48,7 @@ class App extends React.Component {
             id: +new Date(),
             title,
             body,
-            archieved,
+            archived,
             createdAt,
           },
         ],
@@ -52,9 +66,15 @@ class App extends React.Component {
           return data;
         }
       })
+      .filter((data) => !data.archived)
       .map((data, index) => {
         return (
-          <NoteItem key={index} {...data} onDelete={this.onDeleteHandler} />
+          <NoteItem
+            key={index}
+            {...data}
+            onDelete={this.onDeleteHandler}
+            onArchive={this.onArchiveHandler}
+          />
         );
       });
     return (
@@ -71,6 +91,13 @@ class App extends React.Component {
           <h1 className="notes-list__empty-message">No note yet</h1>
         )}
         <div className="notes-list">{items}</div>
+
+        {/* archived note */}
+        <ArchivedNote
+          notes={this.state.notes}
+          onDelete={this.onDeleteHandler}
+          onArchive={this.onArchiveHandler}
+        />
       </div>
     );
   }

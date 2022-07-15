@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { showFormattedDate } from "../utils";
 import DeleteModal from "./DeleteModal";
 
-function NoteItem({ id, title, body, isArchieved, createdAt, onDelete }) {
+function NoteItem({ id, title, body, onArchive, createdAt, onDelete }) {
   const [open, setOpen] = useState(false);
 
   const handleDeleteClick = () => setOpen(!open);
@@ -18,7 +18,12 @@ function NoteItem({ id, title, body, isArchieved, createdAt, onDelete }) {
         <p className="note-item__date">{showFormattedDate(createdAt)}</p>
         <div className="note-item__action">
           <button className="note-item__archive-button">Edit</button>
-          <button className="note-item__archive-button">Archive</button>
+          <button
+            className="note-item__archive-button"
+            onClick={() => onArchive(id)}
+          >
+            Archive
+          </button>
           <button
             className="note-item__delete-button"
             onClick={handleDeleteClick}

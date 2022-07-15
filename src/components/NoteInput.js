@@ -19,9 +19,10 @@ class NoteInput extends React.Component {
   }
 
   onTitleChangeEventHandler(event) {
+    const limit = 50;
     this.setState(() => {
       return {
-        title: event.target.value,
+        title: event.target.value.slice(0, limit),
       };
     });
   }
@@ -42,6 +43,12 @@ class NoteInput extends React.Component {
   render() {
     return (
       <form className="note-input" onSubmit={this.onSubmitEventHandler}>
+        <h1>Title</h1>
+        {this.state.title.length > 0 ? (
+          <p>{50 - this.state.title.length} chara left</p>
+        ) : (
+          ""
+        )}
         <input
           type="text"
           className="note-input__title"
@@ -49,6 +56,7 @@ class NoteInput extends React.Component {
           value={this.state.title}
           onChange={this.onTitleChangeEventHandler}
         />
+        <h1>Body</h1>
         <input
           type="text"
           className="note-input__body"
