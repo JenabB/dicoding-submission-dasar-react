@@ -63,15 +63,16 @@ class App extends React.Component {
         else if (
           data.title.toLowerCase().includes(this.state.query.toLowerCase())
         ) {
+          console.log(data);
           return data;
         }
       })
       .filter((data) => !data.archived)
-      .map((data, index) => {
+      .map((el, index) => {
         return (
           <NoteItem
             key={index}
-            {...data}
+            {...el}
             onDelete={this.onDeleteHandler}
             onArchive={this.onArchiveHandler}
           />
