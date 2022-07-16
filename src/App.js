@@ -63,7 +63,6 @@ class App extends React.Component {
         else if (
           data.title.toLowerCase().includes(this.state.query.toLowerCase())
         ) {
-          console.log(data);
           return data;
         }
       })
